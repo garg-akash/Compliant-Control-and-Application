@@ -27,6 +27,9 @@
 #include "geometry_msgs/Wrench.h"
 #include "std_msgs/Float64MultiArray.h"
 
+#include <kdl/jacobian.hpp>
+#include <kdl/chainjnttojacsolver.hpp>
+
 typedef Eigen::Matrix<double, 6, 6> Matrix6d;
 class Impedance: public kdl_base::KDL_Base
 {
@@ -47,6 +50,8 @@ public:
         std::vector<double> desired_pose);
 
     void run();
+
+    void appendEigenVectorToFile(const Eigen::VectorXd& vec, const std::string& filename);
 
 private:
 
@@ -91,6 +96,8 @@ protected:
     KDL::Rotation                   Desired_Ori_;
     KDL::Vector                     Desired_Pos_;
     KDL::Frame                      Desired_Pose_;
+    KDL::Twist                      Desired_Vel_;
+    boost::shared_ptr<KDL::ChainJntToJacSolver> jac_solver_;
 
     KDL::Vector                     Gravity;
 
